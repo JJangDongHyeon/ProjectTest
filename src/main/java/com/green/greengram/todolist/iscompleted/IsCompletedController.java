@@ -1,16 +1,19 @@
 package com.green.greengram.todolist.iscompleted;
 
 import com.green.greengram.common.model.ResultDto;
+import com.green.greengram.todolist.iscompleted.model.GetIsCompletedListReq;
+import com.green.greengram.todolist.iscompleted.model.GetIsCompletedListRes;
 import com.green.greengram.todolist.iscompleted.model.ToggleIsCompletedReq;
+import com.green.greengram.todolist.model.GetTodoListReq;
+import com.green.greengram.todolist.model.GetTodoListRes;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,8 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class IsCompletedController {
     private final IsCompletedService service;
 
-    @GetMapping
-    @Operation(summary = "완료된 일" , description = "Toggle 처리")
+    @PatchMapping
+    @Operation(summary = "일정 완료 체크" , description = "Toggle 처리, " +
+            "                                           결과가 0 이다 >> 체크 > 비체크 : 체크 취소" +
+            "                                           결과가 1 이다 >> 비체크 > 체크 : 체크 등록")
     public ResultDto<Integer> toggleIsCompleted(@ParameterObject @ModelAttribute ToggleIsCompletedReq p){
         int result = service.toggleIsCompleted(p);
         //result == 0 >> isCompleted 취소 (체크  >비체크) : 체크 취소
@@ -31,5 +36,16 @@ public class IsCompletedController {
                 .resultData(result)
                 .build();
 
+    }
+    @GetMapping
+    @Operation(summary = "완료된 일정 불러오기" , description = "완료된 일정이 체크 돼있는 것만 불러옵니다.")
+    public ResultDto<List<GetIsCompletedListRes>> getIsCompletedList(@ParameterObject @ModelAttribute GetIsCompletedListReq p){
+        List<GetIsCompletedListRes> list = service.getIsCompletedList(p);
+
+        return ResultDto.<List<GetIsCompletedListRes>>builder().
+                statusCode(HttpStatus.OK).
+                resultMsg(HttpStatus.OK.toString()).
+                resultData(list).
+                build();
     }
 }

@@ -8,8 +8,8 @@
              user_id = #{userId}
     </insert>
 
-    <select id="getListId">
-        SELECT A.content, A.is_completed AS isCompleted, A.created_at AS createdAt
+    <select id="getTodoList">
+        SELECT A.list_id AS listId, A.content, A.is_completed AS isCompleted, A.created_at AS createdAt
         FROM todolist A
         JOIN user B
         ON A.user_id = B.user_id
@@ -17,7 +17,7 @@
         ORDER BY A.list_id
     </select>
 
-    <delete id="delListId">
+    <delete id="delTodoList">
         DELETE FROM todolist
         WHERE list_id = #{listId};
     </delete>
@@ -37,6 +37,16 @@
     <update id="putDelIsCompleted">
         UPDATE  todolist
         SET  is_completed = 0
+        WHERE list_id = #{listId}
+    </update>
+
+    <update id="putTodoList">
+        UPDATE  todolist
+        <set>
+            <if test=" content != null and content != '' ">
+            content = #{content}
+            </if>
+        </set>
         WHERE list_id = #{listId}
     </update>
 </mapper>

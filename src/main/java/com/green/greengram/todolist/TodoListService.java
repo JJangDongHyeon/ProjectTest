@@ -19,17 +19,21 @@ public class TodoListService {
     private final CustomFileUtils customFileUtils;
 
     @Transactional
-    public long postTodoList(PostTodoListReq p){
+    public int postTodoList(PostTodoListReq p){
        int affectedRow =  mapper.postTodoList(p);
-        return p.getListId();
+        return affectedRow;
     }
 
-    public List<GetTodoListRes> getListId(GetTodoListReq p){
-        List<GetTodoListRes> list = mapper.getListId(p);
+    public List<GetTodoListRes> getTodoList(GetTodoListReq p){
+        List<GetTodoListRes> list = mapper.getTodoList(p);
         return list;
     }
 
-    public int delListId(long listId){
+    public int delTodoList(long listId){
         return mapper.delListId(listId);
+    }
+
+    public int putTodoList(PutTodoListReq p){
+        return mapper.putTodoList(p);
     }
 }

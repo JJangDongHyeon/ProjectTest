@@ -4,6 +4,8 @@ import com.green.greengram.common.model.ResultDto;
 import com.green.greengram.todolist.model.GetTodoListReq;
 import com.green.greengram.todolist.model.GetTodoListRes;
 import com.green.greengram.todolist.model.PostTodoListReq;
+import com.green.greengram.todolist.model.PutTodoListReq;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
@@ -21,10 +23,11 @@ public class TodoListController {
 
 
     @PostMapping
-    public ResultDto<Long> postTodoList(@ParameterObject @ModelAttribute PostTodoListReq p){
-        long listId= service.postTodoList(p);
+    @Operation(summary = "일정 등록" , description = "")
+    public ResultDto<Integer> postTodoList(@ParameterObject @ModelAttribute PostTodoListReq p){
+        int listId= service.postTodoList(p);
 
-        return ResultDto.<Long>builder()
+        return ResultDto.<Integer>builder()
                 .statusCode(HttpStatus.OK)
                 .resultMsg("TodoList 추가 완료")
                 .resultData(listId)
@@ -32,8 +35,9 @@ public class TodoListController {
     }
 
     @GetMapping
-    public ResultDto<List<GetTodoListRes>> getListId(@ParameterObject @ModelAttribute GetTodoListReq p){
-        List<GetTodoListRes> list = service.getListId(p);
+    @Operation(summary = "일정 불러오기" , description = "완료된 일정까지 모두 불러옵니다.")
+    public ResultDto<List<GetTodoListRes>> getTodoList(@ParameterObject @ModelAttribute GetTodoListReq p){
+        List<GetTodoListRes> list = service.getTodoList(p);
 
         return ResultDto.<List<GetTodoListRes>>builder().
                 statusCode(HttpStatus.OK).
@@ -42,9 +46,22 @@ public class TodoListController {
                 build();
     }
 
+
     @DeleteMapping
-    public ResultDto<Integer> delListId(@ParameterObject @RequestParam long listId){
-        int list = service.delListId(listId);
+    @Operation(summary = "일정 삭제" , description = "listId는 일정의 pk")
+    public ResultDto<Integer> delTodoList(@ParameterObject @RequestParam long listId){
+        int result = service.delTodoList(listId);
+
+        return ResultDto.<Integer>builder().
+                statusCode(HttpStatus.OK).
+                resultMsg(HttpStatus.OK.toString()).
+                resultData(result).
+                build();
+    }
+    @PutMapping
+    @Operation(summary = "일정 수정" , description = "listId는 일정의 pk")
+    public ResultDto<Integer> putTodoList(@ParameterObject @ModelAttribute PutTodoListReq p){
+        int list = service.putTodoList(p);
 
         return ResultDto.<Integer>builder().
                 statusCode(HttpStatus.OK).

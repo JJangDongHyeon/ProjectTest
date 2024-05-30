@@ -8,15 +8,26 @@
         WHERE list_id = #{listId}
     </select>
 
-    <update id="putInsIsCompleted">
+    <update id="patchInsIsCompleted">
         UPDATE  todolist
         SET  is_completed = 1
         WHERE list_id = #{listId}
     </update>
 
-    <update id="putDelIsCompleted">
+    <update id="patchDelIsCompleted">
         UPDATE  todolist
         SET  is_completed = 0
         WHERE list_id = #{listId}
     </update>
+
+    <select id="getIsCompletedList">
+        SELECT  list_id AS listId,
+                user_id AS userId,
+                content,
+                is_completed AS isCompleted,
+                created_at AS createdAt
+        FROM    todolist
+        WHERE   is_completed = 1 AND
+                user_id = #{userId};
+    </select>
 </mapper>

@@ -9,6 +9,7 @@ import java.util.List;
 @Mapper
 public interface TodoListMapper {
     int postTodoList(PostTodoListReq p);
-    List<GetTodoListRes> getListId(GetTodoListReq p);
+    List<GetTodoListRes> getTodoList(GetTodoListReq p);
     int delListId(long listId);
+    int putTodoList(PutTodoListReq p);
 }
